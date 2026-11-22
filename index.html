@@ -7,6 +7,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; media-src data: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <title>KnapKidz</title>
 <meta name="copyright" content="© 2026 KnapKidz. Niet doorverspreiden zonder toestemming van de maker.">
+<script>try{var _t=localStorage.getItem('knapkidz-thema');if(_t==='donker'||(_t==='auto'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.setAttribute('data-thema','donker')}catch(e){}</script>
 <style>
 :root{--bg:#fbe9ef;--card:#fff;--ink:#2b2229;--mute:#6b5a64;--line:#ecd2dc;--cell:#efe4e8;--green:#3c9e68;--greenSoft:#d3eddd;--greenInk:#14502f;--blue:#456f9c;--blueSoft:#dde9f5;--btn:#2f6f8f;--btnInk:#fff;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
@@ -120,6 +121,26 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
 #slotov{position:fixed;inset:0;z-index:10000;background:var(--bg,#fbe9ef);overflow:auto;display:flex;justify-content:center;padding:16px}
 #slotov .wk{max-width:480px;width:100%;margin:auto 0;text-align:center}#slotov h1{margin:0 0 8px}#slotov input{width:100%;font-size:20px;padding:12px;border-radius:12px;border:2px solid #cbd5e1;margin:10px 0;box-sizing:border-box}
 .top .maan{margin-left:auto;min-width:44px}.top .maan~#mus{margin-left:0!important}.maan *{pointer-events:none}
+
+/* donkere modus */
+html[data-thema="donker"]{color-scheme:dark;--bg:#1d1822;--card:#2a2330;--ink:#f4eaf0;--mute:#bfaeb9;--line:#4b3e49;--cell:#3b3141;--green:#5cc58a;--greenSoft:#1f4332;--greenInk:#a6e8c1;--blue:#8db4e0;--blueSoft:#27384d;--btn:#3b87ad;--btnInk:#fff}
+html[data-thema="donker"] body{background:var(--bg);color:var(--ink)}
+html[data-thema="donker"] [style*="background:#fff"]{background:var(--card)!important}
+html[data-thema="donker"] [style*="#cbd5e1"]{border-color:#5d4f5b!important}
+html[data-thema="donker"] button[style*="background"]{color:#2b2229}
+html[data-thema="donker"] button[style*="#2f5fb3"],html[data-thema="donker"] button[style*="#2b2229"]{color:#fff}
+html[data-thema="donker"] .fb.ok{color:var(--greenInk)}
+html[data-thema="donker"] .chip[aria-pressed=true]{color:#e8f1fb}
+html[data-thema="donker"] .btn:disabled{background:#4a3f4a;color:#b9a9b5}
+html[data-thema="donker"] .logo{mix-blend-mode:normal;border-radius:18px}
+html[data-thema="donker"] .about details{border-top-color:#4b3e49}
+html[data-thema="donker"] #welkom,html[data-thema="donker"] #slotov{background:var(--bg)}
+html[data-thema="donker"] input[type=password],html[data-thema="donker"] input[type=text]{background:var(--card);color:var(--ink);border-color:#5d4f5b}
+h1:focus,h1:focus-visible{outline:none}
+html[data-thema="donker"] #mus svg path[fill="#2b2229"],html[data-thema="donker"] .maan svg path[fill="#2b2229"]{fill:#f4eaf0}
+html[data-thema="donker"] #mus svg path[stroke="#2b2229"],html[data-thema="donker"] .maan svg path[stroke="#2b2229"]{stroke:#f4eaf0}
+html[data-thema="donker"] .maan svg path[fill="#f5b301"]{fill:#f5b301}
+html[data-thema="donker"] .ghost{color:var(--ink)}
 
 #pal .chip[aria-pressed="true"]{outline:4px solid var(--ink)}
 </style>
@@ -1547,17 +1568,22 @@ function tick(){if(isLocked()){lock();return}var m=slotMin();if(!m)return;
  if(document.visibilityState==='hidden'||Date.now()-last>60000||document.getElementById('welkom'))return;
  var u=useGet();u.s+=5;useSet(u);if(u.s>=m*60)lock()}
 setInterval(tick,5000);
+/* --- donkere modus --- */
+function themaGet(){var v=LS('knapkidz-thema');return v==='donker'||v==='auto'?v:'licht'}
+function themaApply(){var v=themaGet(),d=v==='donker'||(v==='auto'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches),h=document.documentElement;if(d)h.setAttribute('data-thema','donker');else h.removeAttribute('data-thema');var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',d?'#1d1822':'#fbe9ef')}
+try{if(window.matchMedia)matchMedia('(prefers-color-scheme: dark)').addEventListener('change',themaApply)}catch(e){}
 /* --- knoppen en oudermenu --- */
 function inject(){var a=document.getElementById('app');if(!a)return;var top=a.querySelector('.top');
  if(top&&!top.querySelector('.maan')){var b=document.createElement('button');b.className='ghost maan';b.type='button';b.onclick=function(){blSet(blNext())};var mus=top.querySelector('#mus');if(mus)top.insertBefore(b,mus);else top.appendChild(b);blApply()}
  var mv=a.querySelector('#mvol');if(mv&&!a.querySelector('#slotset')){var u=useGet(),m=slotMin(),ch=[0,15,30,45,60].map(function(x){return '<button class="chip" data-sl="'+x+'" aria-pressed="'+(m===x)+'">'+(x?x+' min':'Uit')+'</button>'}).join('');
-  mv.parentElement.insertAdjacentHTML('afterend','<div id="slotset" style="width:100%;margin:8px 0"><label for="blrng">🌙 Blauwlichtfilter: <b id="blval"></b></label><input id="blrng" type="range" min="0" max="100" step="5" style="width:100%"><p class="small">Ook te zetten met het maantje bovenin een oefening.</p><label>🔒 Vergrendelen na gebruik</label><div class="chips">'+ch+'</div><p class="small" id="slinfo"></p><button class="chip" id="slreset">Teller op nul</button></div>');
+  mv.parentElement.insertAdjacentHTML('afterend','<div id="slotset" style="width:100%;margin:8px 0"><label for="blrng">🌙 Blauwlichtfilter: <b id="blval"></b></label><input id="blrng" type="range" min="0" max="100" step="5" style="width:100%"><p class="small">Ook te zetten met het maantje bovenin een oefening.</p><label>🎨 Uiterlijk</label><div class="chips">'+[['licht','☀️ Licht'],['donker','🌙 Donker'],['auto','🔄 Automatisch']].map(function(x){return '<button class="chip" data-th="'+x[0]+'" aria-pressed="'+(themaGet()===x[0])+'">'+x[1]+'</button>'}).join('')+'</div><label>🔒 Vergrendelen na gebruik</label><div class="chips">'+ch+'</div><p class="small" id="slinfo"></p><button class="chip" id="slreset">Teller op nul</button></div>');
+  a.querySelectorAll('[data-th]').forEach(function(c){c.onclick=function(){LS('knapkidz-thema',c.dataset.th);themaApply();a.querySelectorAll('[data-th]').forEach(function(d){d.setAttribute('aria-pressed',d===c)})}});
   var r=a.querySelector('#blrng');r.value=blGet();r.oninput=function(){blSet(Number(r.value))};
   var info=function(){var u2=useGet();a.querySelector('#slinfo').textContent='Vandaag gebruikt: '+Math.floor(u2.s/60)+' min'+(slotMin()?' (vergrendelt na '+slotMin()+' min gebruik)':' (vergrendeling uit)')};info();
   a.querySelectorAll('[data-sl]').forEach(function(c){c.onclick=function(){LS('knapkidz-slot',c.dataset.sl);a.querySelectorAll('[data-sl]').forEach(function(d){d.setAttribute('aria-pressed',d===c)});info()}});
   a.querySelector('#slreset').onclick=function(){useSet({d:today(),s:0});info()};blApply()}}
 try{new MutationObserver(inject).observe(document.getElementById('app'),{childList:true})}catch(e){}
-blApply();inject();if(isLocked())lock();
+themaApply();blApply();inject();if(isLocked())lock();
 })();
 
 </script>
